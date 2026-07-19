@@ -1,0 +1,318 @@
+/* Mobile Responsive Styles */
+
+/* Mobile: < 768px */
+@media (max-width: 767px) {
+  /* Header */
+  .header .container {
+    flex-direction: column;
+    gap: 1rem;
+    padding: 1rem;
+  }
+
+  .header h1 {
+    font-size: 1.2rem;
+  }
+
+  .header nav {
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 0.5rem;
+  }
+
+  .header nav a,
+  .header nav button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .user-name {
+    display: none;
+  }
+
+  /* Main Content */
+  .main-content {
+    padding: 1rem 0;
+  }
+
+  /* Chat Page */
+  .chat-page {
+    height: calc(100vh - 100px);
+  }
+
+  .chat-header {
+    padding: 1rem;
+  }
+
+  .back-button {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.9rem;
+  }
+
+  .chat-details h2 {
+    font-size: 1rem;
+  }
+
+  .chat-status {
+    font-size: 0.8rem;
+  }
+
+  .messages-area {
+    padding: 1rem;
+  }
+
+  .message {
+    max-width: 85%;
+  }
+
+  .message-bubble {
+    padding: 0.6rem 0.8rem;
+  }
+
+  .message-text {
+    font-size: 0.95rem;
+  }
+
+  .message-input-area {
+    padding: 1rem;
+  }
+
+  .message-input-container {
+    gap: 0.5rem;
+  }
+
+  .message-input {
+    padding: 0.8rem;
+    font-size: 0.95rem;
+  }
+
+  .send-button {
+    padding: 0.8rem 1.5rem;
+    font-size: 0.95rem;
+  }
+
+  .emoji-button,
+  .file-button {
+    font-size: 1.2rem;
+    padding: 0.4rem;
+  }
+
+  /* Conversations List */
+  .conversation-item {
+    padding: 1rem;
+  }
+
+  .conversation-avatar img,
+  .conversation-avatar .avatar-placeholder {
+    width: 50px;
+    height: 50px;
+  }
+
+  .conversation-info h3 {
+    font-size: 1rem;
+  }
+
+  .conversation-preview {
+    font-size: 0.85rem;
+  }
+
+  /* Profile Page */
+  .profile-picture-section {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .profile-picture-display {
+    margin-bottom: 1rem;
+  }
+
+  .profile-picture,
+  .profile-picture-placeholder {
+    width: 120px;
+    height: 120px;
+  }
+
+  /* Forms */
+  .form-group input,
+  .form-group textarea {
+    font-size: 1rem;
+  }
+
+  /* Buttons */
+  .btn-primary,
+  .btn-secondary {
+    width: 100%;
+    padding: 0.8rem;
+  }
+
+  /* Modals */
+  .modal-content {
+    width: 95%;
+    max-height: 90vh;
+    margin: 5vh auto;
+  }
+
+  .modal-header h2 {
+    font-size: 1.3rem;
+  }
+
+  /* Notifications */
+  .notification-item {
+    padding: 0.8rem;
+  }
+
+  .notification-icon {
+    width: 40px;
+    height: 40px;
+    font-size: 1.5rem;
+  }
+
+  .notification-title {
+    font-size: 0.95rem;
+  }
+
+  .notification-message {
+    font-size: 0.85rem;
+  }
+
+  /* Group Info Panel */
+  .group-info-panel {
+    margin-bottom: 1rem;
+    padding: 1rem;
+  }
+
+  .member-item {
+    padding: 0.8rem;
+  }
+
+  /* File Preview */
+  .image-preview img {
+    max-width: 100%;
+  }
+
+  .video-preview video {
+    max-width: 100%;
+  }
+
+  /* Settings */
+  .setting-item {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 0.8rem;
+  }
+
+  .toggle-switch,
+  .theme-switch {
+    align-self: flex-end;
+  }
+}
+
+/* Tablet: 768px - 1024px */
+@media (min-width: 768px) and (max-width: 1024px) {
+  .header .container {
+    padding: 0 2rem;
+  }
+
+  .message {
+    max-width: 75%;
+  }
+
+  .conversation-item {
+    padding: 1.2rem;
+  }
+}
+
+/* Touch-friendly improvements */
+@media (hover: none) and (pointer: coarse) {
+  /* Increase touch target sizes */
+  .header nav a,
+  .header nav button {
+    min-height: 44px;
+    min-width: 44px;
+  }
+
+  button,
+  .btn-primary,
+  .btn-secondary {
+    min-height: 44px;
+  }
+
+  /* Larger tap areas for interactive elements */
+  .message-actions button {
+    padding: 0.5rem;
+    min-width: 36px;
+    min-height: 36px;
+  }
+
+  .notification-delete {
+    opacity: 1;
+    min-width: 44px;
+    min-height: 44px;
+  }
+
+  /* Remove hover effects on touch devices */
+  .conversation-item:hover {
+    transform: none;
+  }
+
+  .btn-primary:hover {
+    transform: none;
+  }
+}
+
+/* Landscape mobile */
+@media (max-width: 767px) and (orientation: landscape) {
+  .chat-page {
+    height: calc(100vh - 60px);
+  }
+
+  .messages-area {
+    padding: 0.5rem;
+  }
+
+  .message-input-area {
+    padding: 0.5rem;
+  }
+}
+
+/* Small mobile devices */
+@media (max-width: 375px) {
+  .header h1 {
+    font-size: 1rem;
+  }
+
+  .header nav a,
+  .header nav button {
+    padding: 0.3rem 0.6rem;
+    font-size: 0.85rem;
+  }
+
+  .message {
+    max-width: 90%;
+  }
+
+  .message-text {
+    font-size: 0.9rem;
+  }
+}
+
+/* Print styles */
+@media print {
+  .header,
+  .footer,
+  .message-input-area,
+  .back-button,
+  .message-actions,
+  button {
+    display: none !important;
+  }
+
+  .chat-page,
+  .messages-area {
+    height: auto;
+    overflow: visible;
+  }
+
+  .message {
+    break-inside: avoid;
+  }
+}

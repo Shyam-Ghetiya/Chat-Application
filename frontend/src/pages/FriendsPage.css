@@ -1,0 +1,177 @@
+.friends-page {
+  max-width: 900px;
+  margin: 0 auto;
+  padding: 2rem 1rem;
+}
+
+.friends-container {
+  background: white;
+  border-radius: 12px;
+  padding: 2.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.friends-container h2 {
+  margin: 0 0 2rem 0;
+  color: #333;
+  font-size: 2rem;
+  text-align: center;
+}
+
+.friends-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+}
+
+.friend-card {
+  border: 2px solid #e0e0e0;
+  border-radius: 12px;
+  padding: 1.5rem;
+  transition: all 0.3s;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+}
+
+.friend-card:hover {
+  border-color: #667eea;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.15);
+  transform: translateY(-4px);
+}
+
+.friend-avatar {
+  position: relative;
+  margin-bottom: 1rem;
+  width: 80px;
+  height: 80px;
+  display: inline-block;
+  /* Add padding to make room for status indicator */
+  padding: 0 6px 6px 0;
+}
+
+.friend-avatar img {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  object-fit: cover;
+  display: block;
+}
+
+.friend-avatar .avatar-placeholder {
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 2.2rem;
+  font-weight: 600;
+}
+
+.friend-avatar .status-indicator {
+  position: absolute;
+  bottom: 0px;
+  right: 0px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  border: 3px solid white;
+  box-shadow: 0 0 0 1px rgba(0, 0, 0, 0.1), 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.friend-avatar .status-indicator.online {
+  background-color: #4caf50;
+}
+
+.friend-avatar .status-indicator.offline {
+  background-color: #bbb;
+}
+
+.friend-info {
+  flex: 1;
+  margin-bottom: 1rem;
+}
+
+.friend-info h3 {
+  margin: 0 0 0.5rem 0;
+  color: #333;
+  font-size: 1.3rem;
+}
+
+.friend-email {
+  margin: 0 0 0.5rem 0;
+  color: #666;
+  font-size: 0.9rem;
+}
+
+.friend-about {
+  margin: 0.75rem 0;
+  color: #555;
+  font-size: 0.85rem;
+  font-style: italic;
+  line-height: 1.4;
+}
+
+.friend-status {
+  margin-top: 0.75rem;
+}
+
+.status-text {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.status-text.online {
+  color: #4caf50;
+}
+
+.status-text.offline {
+  color: #999;
+}
+
+.friend-actions {
+  width: 100%;
+}
+
+.btn-chat {
+  width: 100%;
+  padding: 0.875rem;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  border: none;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: transform 0.2s;
+}
+
+.btn-chat:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.btn-chat:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.no-friends {
+  text-align: center;
+  padding: 3rem;
+  color: #666;
+}
+
+.no-friends p {
+  margin: 0.5rem 0;
+  font-size: 1.1rem;
+}
+
+@media (max-width: 768px) {
+  .friends-list {
+    grid-template-columns: 1fr;
+  }
+}

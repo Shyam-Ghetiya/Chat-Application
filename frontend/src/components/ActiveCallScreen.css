@@ -1,0 +1,248 @@
+.active-call-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: #1a1a1a;
+  z-index: 10000;
+  display: flex;
+  flex-direction: column;
+}
+
+.call-header {
+  padding: 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: rgba(0, 0, 0, 0.5);
+  color: white;
+}
+
+.call-user-info {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.call-user-avatar {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  overflow: hidden;
+}
+
+.call-user-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.call-user-avatar .avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 20px;
+  font-weight: bold;
+}
+
+.call-user-details h3 {
+  margin: 0;
+  font-size: 18px;
+}
+
+.call-duration {
+  font-size: 14px;
+  color: #ccc;
+  margin: 5px 0 0 0;
+}
+
+.call-status-text {
+  font-size: 14px;
+  color: #4CAF50;
+}
+
+.video-container {
+  flex: 1;
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: #000;
+}
+
+.remote-video {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.local-video {
+  position: absolute;
+  bottom: 20px;
+  right: 20px;
+  width: 200px;
+  height: 150px;
+  border-radius: 10px;
+  border: 2px solid white;
+  object-fit: cover;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+}
+
+.audio-only-indicator {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+}
+
+.audio-only-avatar {
+  width: 150px;
+  height: 150px;
+  border-radius: 50%;
+  overflow: hidden;
+  border: 4px solid white;
+  animation: pulse 2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.4); }
+  50% { transform: scale(1.05); box-shadow: 0 0 0 20px rgba(255, 255, 255, 0); }
+}
+
+.audio-only-avatar img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.audio-only-avatar .avatar-placeholder {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
+  font-size: 60px;
+  font-weight: bold;
+}
+
+.audio-only-info h2 {
+  color: white;
+  margin: 0;
+  font-size: 32px;
+}
+
+.audio-only-info p {
+  color: #ccc;
+  margin: 10px 0 0 0;
+  font-size: 18px;
+}
+
+.call-controls {
+  padding: 30px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 20px;
+  background: rgba(0, 0, 0, 0.7);
+}
+
+.call-control-btn {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  border: none;
+  background: rgba(255, 255, 255, 0.2);
+  color: white;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.call-control-btn:hover {
+  background: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+.call-control-btn.active {
+  background: rgba(255, 255, 255, 0.4);
+}
+
+.call-control-btn.muted {
+  background: rgba(220, 53, 69, 0.8);
+}
+
+.end-call-btn {
+  width: 70px;
+  height: 70px;
+  background: #dc3545;
+  font-size: 28px;
+}
+
+.end-call-btn:hover {
+  background: #c82333;
+  transform: scale(1.1);
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .call-header {
+    padding: 15px;
+  }
+
+  .call-user-avatar {
+    width: 40px;
+    height: 40px;
+  }
+
+  .call-user-details h3 {
+    font-size: 16px;
+  }
+
+  .local-video {
+    width: 120px;
+    height: 90px;
+    bottom: 100px;
+    right: 15px;
+  }
+
+  .call-controls {
+    padding: 20px 15px;
+    gap: 15px;
+  }
+
+  .call-control-btn {
+    width: 50px;
+    height: 50px;
+    font-size: 20px;
+  }
+
+  .end-call-btn {
+    width: 60px;
+    height: 60px;
+    font-size: 24px;
+  }
+
+  .audio-only-avatar {
+    width: 120px;
+    height: 120px;
+  }
+
+  .audio-only-info h2 {
+    font-size: 24px;
+  }
+
+  .audio-only-info p {
+    font-size: 16px;
+  }
+}

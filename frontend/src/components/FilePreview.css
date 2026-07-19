@@ -1,0 +1,151 @@
+.file-preview {
+  margin: 8px 0;
+  max-width: 100%;
+}
+
+.file-info, .file-details {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.file-name {
+  font-weight: 600;
+  color: #333;
+  font-size: 0.9rem;
+  word-break: break-word;
+}
+
+.file-size {
+  font-size: 0.8rem;
+  color: #666;
+}
+
+/* Image Preview */
+.image-preview img {
+  max-width: 300px;
+  max-height: 300px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s;
+  display: block;
+}
+
+.image-preview img:hover {
+  transform: scale(1.02);
+}
+
+.image-preview .file-info {
+  margin-top: 8px;
+}
+
+/* Video Preview */
+.video-preview video {
+  max-width: 400px;
+  max-height: 300px;
+  border-radius: 8px;
+  display: block;
+}
+
+.video-preview .file-info {
+  margin-top: 8px;
+}
+
+/* Audio Preview */
+.audio-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  max-width: 350px;
+}
+
+.audio-icon {
+  font-size: 2rem;
+  flex-shrink: 0;
+}
+
+.audio-preview audio {
+  width: 100%;
+  margin: 8px 0;
+}
+
+/* Document Preview */
+.document-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  max-width: 350px;
+}
+
+.document-icon, .file-icon {
+  font-size: 2.5rem;
+  flex-shrink: 0;
+}
+
+.file-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.btn-view, .btn-download {
+  padding: 6px 12px;
+  border-radius: 6px;
+  text-decoration: none;
+  font-size: 0.85rem;
+  font-weight: 600;
+  transition: all 0.2s;
+  display: inline-block;
+}
+
+.btn-view {
+  background: #007bff;
+  color: white;
+}
+
+.btn-view:hover {
+  background: #0056b3;
+}
+
+.btn-download {
+  background: #28a745;
+  color: white;
+}
+
+.btn-download:hover {
+  background: #218838;
+}
+
+/* Default Preview */
+.default-preview {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 12px;
+  background: #f8f9fa;
+  border-radius: 8px;
+  max-width: 350px;
+}
+
+@media (max-width: 768px) {
+  .image-preview img {
+    max-width: 250px;
+    max-height: 250px;
+  }
+  
+  .video-preview video {
+    max-width: 100%;
+  }
+  
+  .audio-preview,
+  .document-preview,
+  .default-preview {
+    max-width: 100%;
+  }
+}

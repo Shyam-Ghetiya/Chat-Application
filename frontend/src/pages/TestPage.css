@@ -1,0 +1,62 @@
+.test-page {
+  max-width: 800px;
+  margin: 0 auto;
+}
+
+.test-page h2 {
+  color: #1976d2;
+  margin-bottom: 1rem;
+}
+
+.test-button {
+  background-color: #1976d2;
+  color: white;
+  border: none;
+  padding: 1rem 2rem;
+  font-size: 1rem;
+  border-radius: 4px;
+  cursor: pointer;
+  margin-top: 1rem;
+  transition: background-color 0.3s;
+}
+
+.test-button:hover:not(:disabled) {
+  background-color: #1565c0;
+}
+
+.test-button:disabled {
+  background-color: #ccc;
+  cursor: not-allowed;
+}
+
+.response-card {
+  margin-top: 2rem;
+  padding: 2rem;
+  border-radius: 8px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.response-card.success {
+  background-color: #e8f5e9;
+  border: 2px solid #4caf50;
+}
+
+.response-card.error {
+  background-color: #ffebee;
+  border: 2px solid #f44336;
+}
+
+.response-card h3 {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+.response-details p {
+  margin: 0.5rem 0;
+}
+
+.help-text {
+  margin-top: 1rem;
+  font-style: italic;
+  color: #666;
+}

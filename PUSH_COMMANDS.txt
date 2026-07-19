@@ -1,0 +1,119 @@
+═══════════════════════════════════════════════════════
+  QUICK GUIDE: Push to GitHub
+═══════════════════════════════════════════════════════
+
+OPTION 1: Use the Script (Easiest)
+───────────────────────────────────────────────────────
+cd /Users/shyamghetiya/Desktop/chat_application
+./push-to-github.sh
+
+Then follow the on-screen instructions.
+
+
+OPTION 2: Manual Commands (Step by Step)
+───────────────────────────────────────────────────────
+
+Step 1: Navigate to project
+─────────────────────────────
+cd /Users/shyamghetiya/Desktop/chat_application
+
+
+Step 2: Initialize Git
+─────────────────────────────
+git init
+
+
+Step 3: Add all files
+─────────────────────────────
+git add .
+
+
+Step 4: Check what will be committed
+─────────────────────────────────────
+git status
+
+
+Step 5: Create first commit
+─────────────────────────────
+git commit -m "Initial commit: Complete chat application with all features"
+
+
+Step 6: Set main branch
+─────────────────────────────
+git branch -M main
+
+
+Step 7: Go to GitHub and create repository
+───────────────────────────────────────────
+1. Open https://github.com
+2. Click "+" → "New repository"
+3. Name: chat-application
+4. Description: Real-time chat application with voice/video calling
+5. Choose Public or Private
+6. DO NOT check "Initialize with README"
+7. Click "Create repository"
+
+
+Step 8: Add GitHub remote (Replace YOUR_USERNAME)
+──────────────────────────────────────────────────
+git remote add origin https://github.com/YOUR_USERNAME/chat-application.git
+
+
+Step 9: Push to GitHub
+─────────────────────────────
+git push -u origin main
+
+
+═══════════════════════════════════════════════════════
+  IMPORTANT NOTES
+═══════════════════════════════════════════════════════
+
+1. When pushing, use a Personal Access Token as password:
+   - Go to GitHub → Settings → Developer settings
+   - Personal access tokens → Tokens (classic)
+   - Generate new token (classic)
+   - Select scope: ✓ repo
+   - Copy token and use as password
+
+2. Files that will NOT be uploaded (in .gitignore):
+   ✗ node_modules/
+   ✗ backend/target/
+   ✗ uploads/
+   ✗ .env files
+   ✗ IDE files
+
+3. Files that WILL be uploaded:
+   ✓ Source code
+   ✓ Documentation
+   ✓ Configuration files
+   ✓ README.md
+   ✓ .gitignore
+
+
+═══════════════════════════════════════════════════════
+  QUICK COPY-PASTE COMMANDS
+═══════════════════════════════════════════════════════
+
+cd /Users/shyamghetiya/Desktop/chat_application
+git init
+git add .
+git commit -m "Initial commit: Complete chat application"
+git branch -M main
+git remote add origin https://github.com/YOUR_USERNAME/chat-application.git
+git push -u origin main
+
+
+═══════════════════════════════════════════════════════
+  AFTER PUSHING
+═══════════════════════════════════════════════════════
+
+Your repository will be at:
+https://github.com/YOUR_USERNAME/chat-application
+
+To make future updates:
+git add .
+git commit -m "Your update message"
+git push
+
+
+═══════════════════════════════════════════════════════

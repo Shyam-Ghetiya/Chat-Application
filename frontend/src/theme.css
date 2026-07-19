@@ -1,0 +1,188 @@
+/* Theme Variables */
+:root {
+  /* Light Theme */
+  --bg-primary: #ffffff;
+  --bg-secondary: #f5f7fa;
+  --bg-tertiary: #e0e0e0;
+  --text-primary: #333333;
+  --text-secondary: #666666;
+  --text-tertiary: #999999;
+  --border-color: #e0e0e0;
+  --border-color-hover: #667eea;
+  --shadow: rgba(0, 0, 0, 0.1);
+  --shadow-hover: rgba(0, 0, 0, 0.15);
+  --accent-primary: #1976d2;
+  --accent-secondary: #667eea;
+  --accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --success: #4caf50;
+  --warning: #ffc107;
+  --error: #f44336;
+  --info: #2196f3;
+  --online-indicator: #4caf50;
+  --message-own-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --message-other-bg: #ffffff;
+  --message-own-text: #ffffff;
+  --message-other-text: #333333;
+  --hover-bg: #f8f9fa;
+  --active-bg: #e7f3ff;
+  --skeleton-bg: #f0f0f0;
+  --skeleton-shine: #e0e0e0;
+}
+
+[data-theme='dark'] {
+  /* Dark Theme */
+  --bg-primary: #1a1a1a;
+  --bg-secondary: #2d2d2d;
+  --bg-tertiary: #404040;
+  --text-primary: #ffffff;
+  --text-secondary: #b0b0b0;
+  --text-tertiary: #808080;
+  --border-color: #404040;
+  --border-color-hover: #667eea;
+  --shadow: rgba(0, 0, 0, 0.3);
+  --shadow-hover: rgba(0, 0, 0, 0.5);
+  --accent-primary: #2196f3;
+  --accent-secondary: #667eea;
+  --accent-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --success: #66bb6a;
+  --warning: #ffa726;
+  --error: #ef5350;
+  --info: #42a5f5;
+  --online-indicator: #66bb6a;
+  --message-own-bg: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  --message-other-bg: #2d2d2d;
+  --message-own-text: #ffffff;
+  --message-other-text: #ffffff;
+  --hover-bg: #353535;
+  --active-bg: #1e3a5f;
+  --skeleton-bg: #2d2d2d;
+  --skeleton-shine: #404040;
+}
+
+/* Apply theme variables globally */
+body {
+  background-color: var(--bg-secondary);
+  color: var(--text-primary);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+/* Override specific components */
+.header {
+  background-color: var(--accent-primary);
+  box-shadow: 0 2px 4px var(--shadow);
+}
+
+.main-content {
+  background-color: var(--bg-secondary);
+}
+
+.footer {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+/* Cards and Containers */
+.profile-container,
+.chats-container,
+.notifications-container,
+.friends-container,
+.chat-container {
+  background: var(--bg-primary);
+  box-shadow: 0 2px 8px var(--shadow);
+  color: var(--text-primary);
+}
+
+/* Borders */
+.profile-container,
+.chats-container,
+.chat-header,
+.message-input-area {
+  border-color: var(--border-color);
+}
+
+/* Messages */
+.message-bubble.other-message {
+  background: var(--message-other-bg);
+  color: var(--message-other-text);
+  box-shadow: 0 1px 2px var(--shadow);
+}
+
+.message-bubble.own-message {
+  background: var(--message-own-bg);
+  color: var(--message-own-text);
+}
+
+/* Inputs */
+input,
+textarea,
+.message-input {
+  background-color: var(--bg-primary);
+  color: var(--text-primary);
+  border-color: var(--border-color);
+}
+
+input:focus,
+textarea:focus,
+.message-input:focus {
+  border-color: var(--border-color-hover);
+}
+
+/* Hover effects */
+.conversation-item:hover,
+.friend-item:hover,
+.notification-item:hover {
+  background-color: var(--hover-bg);
+  border-color: var(--border-color-hover);
+}
+
+/* Unread/Active states */
+.conversation-item.unread,
+.notification-item.unread {
+  background: var(--active-bg);
+}
+
+/* Skeleton loaders */
+.skeleton {
+  background: linear-gradient(
+    90deg,
+    var(--skeleton-bg) 25%,
+    var(--skeleton-shine) 50%,
+    var(--skeleton-bg) 75%
+  );
+}
+
+/* Buttons */
+.btn-primary {
+  background: var(--accent-gradient);
+}
+
+.btn-secondary {
+  background-color: var(--bg-tertiary);
+  color: var(--text-primary);
+}
+
+/* Online indicator */
+.online-indicator {
+  background-color: var(--online-indicator);
+}
+
+/* Error/Success messages */
+.error-message {
+  background-color: var(--error);
+  color: white;
+}
+
+.success-message {
+  background-color: var(--success);
+  color: white;
+}
+
+/* Smooth transitions for theme changes */
+* {
+  transition: background-color 0.3s ease, color 0.3s ease, border-color 0.3s ease;
+}
+
+/* Prevent transition on page load */
+.no-transition * {
+  transition: none !important;
+}
