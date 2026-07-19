@@ -21,7 +21,7 @@ public class CorsConfig {
         config.setAllowedHeaders(Arrays.asList("*"));
         config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS", "PATCH"));
         config.setMaxAge(3600L);
-        
+
         source.registerCorsConfiguration("/**", config);
         return new CorsFilter(source);
     }

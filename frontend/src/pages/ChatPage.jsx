@@ -10,7 +10,20 @@ import GroupInfoPanel from '../components/GroupInfoPanel'
 import FilePreview from '../components/FilePreview'
 import IncomingCallModal from '../components/IncomingCallModal'
 import ActiveCallScreen from '../components/ActiveCallScreen'
-import './ChatPage.css'
+import { Avatar, Button } from '../components/ui'
+import {
+  FiArrowLeft,
+  FiPhone,
+  FiVideo,
+  FiInfo,
+  FiPaperclip,
+  FiSmile,
+  FiSend,
+  FiCornerUpLeft,
+  FiEdit2,
+  FiTrash2,
+  FiX
+} from 'react-icons/fi'
 
 function ChatPage() {
   const { conversationId } = useParams()
@@ -585,19 +598,32 @@ function ChatPage() {
 
   if (loading) {
     return (
-      <div className="chat-page">
-        <div className="loading">Loading conversation...</div>
+      <div className="flex items-center justify-center h-full bg-white dark:bg-gray-800">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Loading conversation...</p>
+        </div>
       </div>
     )
   }
 
   if (error || !conversation) {
     return (
-      <div className="chat-page">
-        <div className="error-message">{error || 'Conversation not found'}</div>
-        <button onClick={() => navigate('/chats')} className="btn-primary">
+      <div className="flex flex-col items-center justify-center h-full bg-white dark:bg-gray-800 p-8">
+        <div className="w-20 h-20 bg-red-100 dark:bg-red-900/20 rounded-full flex items-center justify-center mb-4">
+          <FiX className="w-10 h-10 text-red-600 dark:text-red-400" />
+        </div>
+        <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+          {error || 'Conversation not found'}
+        </h3>
+        <Button
+          variant="primary"
+          size="md"
+          onClick={() => navigate('/chats')}
+          leftIcon={FiArrowLeft}
+        >
           Back to Chats
-        </button>
+        </Button>
       </div>
     )
   }
@@ -617,7 +643,7 @@ function ChatPage() {
   }
 
   return (
-    <div className="chat-page">
+    <div className="h-full flex flex-col bg-white dark:bg-gray-800">
       {/* Incoming Call Modal */}
       {incomingCall && (
         <IncomingCallModal
@@ -627,278 +653,442 @@ function ChatPage() {
         />
       )}
       
-      <div className="chat-container">
-        {/* Chat Header */}
-        <div className="chat-header">
-          <button onClick={() => navigate('/chats')} className="back-button">
-            ← Back
-          </button>
+      {/* Chat Header */}
+      <div className="flex-shrink-0 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800">
+        <div className="flex items-center justify-between p-4 lg:p-5">
+          {/* Left: Back + User Info */}
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <button
+              onClick={() => navigate('/chats')}
+              className="lg:hidden w-10 h-10 flex items-center justify-center rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+            >
+              <FiArrowLeft className="w-5 h-5" />
+            </button>
 
-          <div className="chat-header-info">
-            <div className="chat-avatar">
-              {display.picture ? (
-                <img src={display.picture} alt={display.name} />
-              ) : (
-                <div className="avatar-placeholder">
-                  {display.initial}
-                </div>
-              )}
-              {display.isOnline && (
-                <span className="online-indicator"></span>
-              )}
-            </div>
+            <Avatar
+              name={display.name}
+              src={display.picture}
+              size="lg"
+              showOnline={display.isOnline}
+            />
 
-            <div className="chat-details">
-              <h2>{display.name}</h2>
-              <p className={`chat-status ${display.isOnline ? 'online' : ''}`}>
+            <div className="flex-1 min-w-0">
+              <h2 className="font-semibold text-gray-900 dark:text-white truncate">
+                {display.name}
+              </h2>
+              <p className={`text-sm ${display.isOnline ? 'text-emerald-600 dark:text-emerald-400' : 'text-gray-500 dark:text-gray-400'}`}>
                 {display.subtitle}
               </p>
             </div>
           </div>
-          
-          {/* Call buttons for direct conversations */}
-          {conversation.type === 'DIRECT' && conversation.otherUser && (
-            <div className="call-buttons">
-              <button 
-                onClick={handleVoiceCall}
-                className="btn-call-voice"
-                title="Voice Call"
+
+          {/* Right: Action Buttons */}
+          <div className="flex items-center gap-2">
+            {conversation.type === 'DIRECT' && conversation.otherUser && (
+              <>
+                <button
+                  onClick={handleVoiceCall}
+                  className="w-10 h-10 flex items-center justify-center rounded-xl text-gray-600 dark:text-gray-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 hover:text-emerald-600 dark:hover:text-emerald-400 transition-colors"
+                  title="Voice Call"
+                >
+                  <FiPhone className="w-5 h-5" />
+                </button>
+                <button
+                  onClick={handleVideoCall}
+                  className="w-10 h-10 flex items-center justify-center rounded-xl text-gray-600 dark:text-gray-400 hover:bg-blue-50 dark:hover:bg-blue-900/20 hover:text-blue-600 dark:hover:text-blue-400 transition-colors"
+                  title="Video Call"
+                >
+                  <FiVideo className="w-5 h-5" />
+                </button>
+              </>
+            )}
+            
+            {conversation.type === 'GROUP' && (
+              <button
+                onClick={() => setShowGroupInfo(!showGroupInfo)}
+                className={`w-10 h-10 flex items-center justify-center rounded-xl transition-colors ${
+                  showGroupInfo
+                    ? 'bg-emerald-50 dark:bg-emerald-900/20 text-emerald-600 dark:text-emerald-400'
+                    : 'text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700'
+                }`}
+                title="Group Info"
               >
-                📞
+                <FiInfo className="w-5 h-5" />
               </button>
-              <button 
-                onClick={handleVideoCall}
-                className="btn-call-video"
-                title="Video Call"
-              >
-                📹
-              </button>
-            </div>
-          )}
-          
-          {conversation.type === 'GROUP' && (
-            <button 
-              onClick={() => setShowGroupInfo(!showGroupInfo)} 
-              className="btn-group-info"
-              title="Group Info"
-            >
-              ℹ️
-            </button>
-          )}
+            )}
+          </div>
         </div>
         
         {/* Group Info Panel */}
         {showGroupInfo && conversation.type === 'GROUP' && (
-          <GroupInfoPanel 
-            conversation={conversation}
-            onUpdate={handleConversationUpdate}
-            onLeave={handleLeaveGroup}
-            onDelete={handleDeleteGroup}
-          />
+          <div className="border-t border-gray-200 dark:border-gray-700">
+            <GroupInfoPanel 
+              conversation={conversation}
+              onUpdate={handleConversationUpdate}
+              onLeave={handleLeaveGroup}
+              onDelete={handleDeleteGroup}
+            />
+          </div>
         )}
+      </div>
 
-        {/* Messages Area */}
-        <div className="messages-area" ref={messagesContainerRef}>
-          <div className="messages-container">
-            {messages.length === 0 ? (
-              <div className="chat-welcome">
-                <div className="welcome-avatar">
-                  {display.picture ? (
-                    <img src={display.picture} alt={display.name} />
-                  ) : (
-                    <div className="avatar-placeholder-large">
-                      {display.initial}
-                    </div>
-                  )}
-                </div>
-                <h3>{display.name}</h3>
-                <p>This is the beginning of your conversation</p>
-                <p className="chat-started">
-                  Started {new Date(conversation.createdAt).toLocaleDateString()}
-                </p>
+      {/* Messages Area */}
+      <div className="flex-1 overflow-y-auto bg-gray-50 dark:bg-gray-900" ref={messagesContainerRef}>
+        <div className="p-4 lg:p-6">
+          {messages.length === 0 ? (
+            <div className="flex flex-col items-center justify-center h-full text-center py-12">
+              <div className="w-24 h-24 mb-6">
+                <Avatar
+                  name={display.name}
+                  src={display.picture}
+                  size="xl"
+                />
               </div>
-            ) : (
-              <div className="messages-list">
-                {messages.map((message) => (
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+                {display.name}
+              </h3>
+              <p className="text-gray-600 dark:text-gray-400 mb-1">
+                This is the beginning of your conversation
+              </p>
+              <p className="text-sm text-gray-500 dark:text-gray-500">
+                Started {new Date(conversation.createdAt).toLocaleDateString()}
+              </p>
+            </div>
+          ) : (
+            <div className="space-y-4">
+              {messages.map((message, index) => {
+                const isOwn = isOwnMessage(message)
+                const showAvatar = !isOwn && (
+                  index === 0 || 
+                  messages[index - 1]?.sender.id !== message.sender.id
+                )
+                
+                return (
                   <div
                     key={message.id}
-                    className={`message ${isOwnMessage(message) ? 'own-message' : 'other-message'}`}
+                    className={`flex gap-2 ${isOwn ? 'flex-row-reverse' : 'flex-row'} group`}
                   >
-                    {!isOwnMessage(message) && (
-                      <div className="message-avatar">
-                        {message.sender.profilePicture ? (
-                          <img src={message.sender.profilePicture} alt={message.sender.name} />
-                        ) : (
-                          <div className="avatar-placeholder-small">
-                            {message.sender.name.charAt(0).toUpperCase()}
-                          </div>
-                        )}
-                      </div>
-                    )}
-                    
-                    <div className="message-content-wrapper">
-                      {!isOwnMessage(message) && conversation.type === 'GROUP' && (
-                        <div className="message-sender-name">{message.sender.name}</div>
+                    {/* Avatar */}
+                    <div className="flex-shrink-0">
+                      {!isOwn && showAvatar ? (
+                        <Avatar
+                          name={message.sender.name}
+                          src={message.sender.profilePicture}
+                          size="sm"
+                        />
+                      ) : (
+                        <div className="w-8 h-8" />
+                      )}
+                    </div>
+
+                    {/* Message Content */}
+                    <div className={`flex flex-col ${isOwn ? 'items-end' : 'items-start'} max-w-[70%]`}>
+                      {/* Sender Name (for group chats) */}
+                      {!isOwn && conversation.type === 'GROUP' && showAvatar && (
+                        <span className="text-xs font-medium text-gray-600 dark:text-gray-400 mb-1 px-3">
+                          {message.sender.name}
+                        </span>
                       )}
                       
                       {/* Reply Info */}
                       {message.replyTo && (
-                        <div className="reply-info">
-                          <small>Replying to {message.replyTo.sender.name}</small>
-                          <p>{message.replyTo.content.substring(0, 50)}{message.replyTo.content.length > 50 ? '...' : ''}</p>
+                        <div className={`px-3 py-2 rounded-lg mb-1 text-xs ${
+                          isOwn 
+                            ? 'bg-emerald-100 dark:bg-emerald-900/30 text-emerald-700 dark:text-emerald-300'
+                            : 'bg-gray-200 dark:bg-gray-700 text-gray-700 dark:text-gray-300'
+                        }`}>
+                          <p className="font-medium">
+                            Replying to {message.replyTo.sender.name}
+                          </p>
+                          <p className="opacity-75 truncate">
+                            {message.replyTo.content.substring(0, 50)}
+                            {message.replyTo.content.length > 50 ? '...' : ''}
+                          </p>
                         </div>
                       )}
                       
-                      <div className="message-bubble">
-                        {message.fileUrl ? (
-                          <FilePreview message={message} />
-                        ) : null}
-                        <p className="message-text">
-                          {message.deletedAt ? (
-                            <em style={{opacity: 0.6}}>{message.content}</em>
-                          ) : (
-                            message.content
-                          )}
+                      {/* Message Bubble */}
+                      <div
+                        className={`px-4 py-2 rounded-2xl ${
+                          isOwn
+                            ? 'bg-gradient-to-br from-emerald-600 to-blue-600 text-white rounded-br-md'
+                            : 'bg-white dark:bg-gray-800 text-gray-900 dark:text-white border border-gray-200 dark:border-gray-700 rounded-bl-md'
+                        }`}
+                      >
+                        {/* File Preview */}
+                        {message.fileUrl && (
+                          <div className="mb-2">
+                            <FilePreview message={message} />
+                          </div>
+                        )}
+                        
+                        {/* Text Content */}
+                        <p className={`text-sm whitespace-pre-wrap break-words ${message.deletedAt ? 'italic opacity-60' : ''}`}>
+                          {message.deletedAt ? message.content : message.content}
                         </p>
-                        <span className="message-time">
-                          {formatMessageTime(message.createdAt)}
-                          {message.editedAt && <span className="edited-label"> (edited)</span>}
-                          {isOwnMessage(message) && !message.deletedAt && (
-                            <span className={`message-status ${message.status === 'SEEN' ? 'seen' : ''}`}>
+                        
+                        {/* Time + Status */}
+                        <div className={`flex items-center gap-1 mt-1 text-xs ${
+                          isOwn ? 'text-white/80' : 'text-gray-500 dark:text-gray-400'
+                        }`}>
+                          <span>{formatMessageTime(message.createdAt)}</span>
+                          {message.editedAt && <span>• edited</span>}
+                          {isOwn && !message.deletedAt && (
+                            <span className={message.status === 'SEEN' ? 'text-blue-200' : ''}>
                               {' '}{getStatusIcon(message.status)}
                             </span>
                           )}
-                        </span>
+                        </div>
                       </div>
-                      
-                      {/* Action buttons */}
+
+                      {/* Action Buttons */}
                       {!message.deletedAt && (
-                        <div className="message-actions">
-                          <button onClick={() => handleReply(message)} title="Reply">↩️</button>
-                          {isOwnMessage(message) && (
+                        <div className={`flex items-center gap-1 mt-1 opacity-0 group-hover:opacity-100 transition-opacity ${
+                          isOwn ? 'flex-row-reverse' : 'flex-row'
+                        }`}>
+                          <button
+                            onClick={() => handleReply(message)}
+                            className="p-1.5 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                            title="Reply"
+                          >
+                            <FiCornerUpLeft className="w-4 h-4" />
+                          </button>
+                          {isOwn && (
                             <>
-                              <button onClick={() => handleEdit(message)} title="Edit">✏️</button>
-                              <button onClick={() => handleDelete(message.id)} title="Delete">🗑️</button>
+                              <button
+                                onClick={() => handleEdit(message)}
+                                className="p-1.5 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+                                title="Edit"
+                              >
+                                <FiEdit2 className="w-4 h-4" />
+                              </button>
+                              <button
+                                onClick={() => handleDelete(message.id)}
+                                className="p-1.5 rounded-lg text-red-600 dark:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors"
+                                title="Delete"
+                              >
+                                <FiTrash2 className="w-4 h-4" />
+                              </button>
                             </>
                           )}
                         </div>
                       )}
                     </div>
                   </div>
-                ))}
-                <div ref={messagesEndRef} />
-              </div>
-            )}
-            
-            {/* Typing Indicator */}
-            {typingUsers.length > 0 && (
-              <div className="typing-indicator-container">
-                <div className="typing-indicator">
-                  <span className="typing-user">
+                )
+              })}
+              <div ref={messagesEndRef} />
+            </div>
+          )}
+          
+          {/* Typing Indicator */}
+          {typingUsers.length > 0 && (
+            <div className="flex items-center gap-2 mt-4">
+              <div className="w-8 h-8" />
+              <div className="px-4 py-3 bg-gray-200 dark:bg-gray-700 rounded-2xl rounded-bl-md">
+                <div className="flex items-center gap-1">
+                  <span className="text-sm text-gray-600 dark:text-gray-400">
                     {typingUsers.length === 1 
                       ? `${typingUsers[0].userName} is typing`
                       : `${typingUsers.length} people are typing`
                     }
                   </span>
-                  <span className="typing-dots">
-                    <span>.</span><span>.</span><span>.</span>
-                  </span>
+                  <div className="flex gap-1 ml-2">
+                    <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></span>
+                    <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></span>
+                    <span className="w-2 h-2 bg-gray-400 rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          )}
+        </div>
+      </div>
+
+      {/* Message Input Area */}
+      <div className="flex-shrink-0 border-t border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 p-4">
+        {/* Error Banner */}
+        {error && (
+          <div className="mb-3 p-3 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-700 dark:text-red-400 text-sm flex items-center justify-between">
+            <span>{error}</span>
+            <button
+              onClick={() => setError('')}
+              className="text-red-600 dark:text-red-400 hover:text-red-700 dark:hover:text-red-300"
+            >
+              <FiX className="w-4 h-4" />
+            </button>
+          </div>
+        )}
+        
+        {/* Reply/Edit Bar */}
+        {(replyingTo || editingMessage) && (
+          <div className="mb-3 p-3 bg-gray-50 dark:bg-gray-700 rounded-xl flex items-center justify-between">
+            <div className="flex-1 min-w-0">
+              {replyingTo && (
+                <>
+                  <p className="text-xs font-medium text-emerald-600 dark:text-emerald-400 mb-1">
+                    Replying to {replyingTo.sender.name}
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+                    {replyingTo.content}
+                  </p>
+                </>
+              )}
+              {editingMessage && (
+                <>
+                  <p className="text-xs font-medium text-blue-600 dark:text-blue-400 mb-1">
+                    Editing message
+                  </p>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 truncate">
+                    {editingMessage.content}
+                  </p>
+                </>
+              )}
+            </div>
+            <button
+              onClick={replyingTo ? cancelReply : cancelEdit}
+              className="ml-3 p-2 rounded-lg text-gray-600 dark:text-gray-400 hover:bg-gray-200 dark:hover:bg-gray-600 transition-colors"
+            >
+              <FiX className="w-5 h-5" />
+            </button>
+          </div>
+        )}
+        
+        {/* Input Form */}
+        <form onSubmit={handleSendMessage} className="flex items-end gap-2">
+          <input
+            type="file"
+            ref={fileInputRef}
+            onChange={handleFileSelect}
+            className="hidden"
+            accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar"
+          />
+          
+          {/* Attach Button */}
+          <button
+            type="button"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={uploadingFile}
+            className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors disabled:opacity-50"
+            title="Attach file"
+          >
+            <FiPaperclip className="w-5 h-5" />
+          </button>
+          
+          {/* Emoji Button */}
+          <div className="relative">
+            <button
+              type="button"
+              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
+              className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-xl text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 transition-colors"
+              title="Add emoji"
+            >
+              <FiSmile className="w-5 h-5" />
+            </button>
+            
+            {showEmojiPicker && (
+              <div className="absolute bottom-full left-0 mb-2 bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl shadow-2xl overflow-hidden" style={{ width: '320px', maxHeight: '400px' }}>
+                <div className="p-3 border-b border-gray-200 dark:border-gray-700">
+                  <p className="text-xs font-semibold text-gray-600 dark:text-gray-400 uppercase">Emojis</p>
+                </div>
+                <div className="overflow-y-auto p-2" style={{ maxHeight: '340px' }}>
+                  {/* Smileys & People */}
+                  <div className="mb-3">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 px-2 mb-2">Smileys</p>
+                    <div className="grid grid-cols-8 gap-1">
+                      {['😀', '😃', '😄', '😁', '😅', '😂', '🤣', '😊', '😇', '🙂', '🙃', '😉', '😌', '😍', '🥰', '😘', '😗', '😙', '😚', '😋', '😛', '😝', '😜', '🤪', '🤨', '🧐', '🤓', '😎', '🤩', '🥳', '😏', '😒'].map(emoji => (
+                        <button
+                          key={emoji}
+                          type="button"
+                          onClick={() => addEmoji(emoji)}
+                          className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-xl"
+                        >
+                          {emoji}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Gestures & Hands */}
+                  <div className="mb-3">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 px-2 mb-2">Gestures</p>
+                    <div className="grid grid-cols-8 gap-1">
+                      {['👋', '🤚', '🖐', '✋', '🖖', '👌', '🤌', '🤏', '✌️', '🤞', '🤟', '🤘', '🤙', '👈', '👉', '👆', '👇', '☝️', '👍', '👎', '✊', '👊', '🤛', '🤜', '👏', '🙌', '👐', '🤲', '🤝', '🙏', '💪', '🦾'].map(emoji => (
+                        <button
+                          key={emoji}
+                          type="button"
+                          onClick={() => addEmoji(emoji)}
+                          className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-xl"
+                        >
+                          {emoji}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Hearts & Symbols */}
+                  <div className="mb-3">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 px-2 mb-2">Hearts</p>
+                    <div className="grid grid-cols-8 gap-1">
+                      {['❤️', '🧡', '💛', '💚', '💙', '💜', '🤎', '🖤', '🤍', '💔', '❤️‍🔥', '❤️‍🩹', '💕', '💞', '💓', '💗', '💖', '💘', '💝', '💟', '☮️', '✝️', '☪️', '🕉', '☸️', '✡️', '🔯', '🕎', '☯️', '☦️', '🛐', '⛎'].map(emoji => (
+                        <button
+                          key={emoji}
+                          type="button"
+                          onClick={() => addEmoji(emoji)}
+                          className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-xl"
+                        >
+                          {emoji}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
+
+                  {/* Objects */}
+                  <div className="mb-3">
+                    <p className="text-xs text-gray-500 dark:text-gray-400 px-2 mb-2">Objects</p>
+                    <div className="grid grid-cols-8 gap-1">
+                      {['🎉', '🎊', '🎈', '🎁', '🏆', '🥇', '🥈', '🥉', '⚽', '🏀', '🏈', '⚾', '🎾', '🏐', '🔥', '⭐', '🌟', '✨', '⚡', '💥', '💫', '💯', '✅', '☑️', '❌', '❎', '➕', '➖', '✖️', '➗', '♾️', '💲'].map(emoji => (
+                        <button
+                          key={emoji}
+                          type="button"
+                          onClick={() => addEmoji(emoji)}
+                          className="w-8 h-8 flex items-center justify-center hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors text-xl"
+                        >
+                          {emoji}
+                        </button>
+                      ))}
+                    </div>
+                  </div>
                 </div>
               </div>
             )}
           </div>
-        </div>
-
-        {/* Message Input */}
-        <div className="message-input-area">
-          {error && (
-            <div className="error-banner">
-              {error}
-              <button onClick={() => setError('')} className="error-close">×</button>
-            </div>
-          )}
           
-          {/* Reply/Edit Bar */}
-          {(replyingTo || editingMessage) && (
-            <div className="reply-edit-bar">
-              <div>
-                {replyingTo && (
-                  <>
-                    <strong>Replying to {replyingTo.sender.name}</strong>
-                    <p>{replyingTo.content.substring(0, 50)}{replyingTo.content.length > 50 ? '...' : ''}</p>
-                  </>
-                )}
-                {editingMessage && (
-                  <>
-                    <strong>Editing message</strong>
-                    <p>{editingMessage.content.substring(0, 50)}{editingMessage.content.length > 50 ? '...' : ''}</p>
-                  </>
-                )}
-              </div>
-              <button onClick={replyingTo ? cancelReply : cancelEdit}>✕</button>
-            </div>
-          )}
+          {/* Text Input */}
+          <input
+            type="text"
+            placeholder={editingMessage ? "Edit message..." : "Type a message..."}
+            value={newMessage}
+            onChange={(e) => handleTyping(e.target.value)}
+            onKeyPress={handleKeyPress}
+            disabled={sending || uploadingFile}
+            className="flex-1 px-4 py-3 bg-gray-50 dark:bg-gray-700 border border-gray-200 dark:border-gray-600 rounded-xl text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-emerald-500 dark:focus:ring-emerald-400 transition-all disabled:opacity-50"
+          />
           
-          <form onSubmit={handleSendMessage} className="message-input-container">
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileSelect}
-              style={{ display: 'none' }}
-              accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar"
-            />
-            
-            <button 
-              type="button"
-              onClick={() => fileInputRef.current?.click()}
-              className="file-button"
-              title="Attach file"
-              disabled={uploadingFile}
-            >
-              📎
-            </button>
-            
-            <button 
-              type="button"
-              onClick={() => setShowEmojiPicker(!showEmojiPicker)}
-              className="emoji-button"
-              title="Add emoji"
-            >
-              😊
-            </button>
-            
-            {showEmojiPicker && (
-              <div className="emoji-picker">
-                {['😊', '😂', '❤️', '👍', '🎉', '🔥', '✨', '👏', '🙌', '💯', '😍', '🤔', '😎', '🥳', '😢', '😅'].map(emoji => (
-                  <button 
-                    key={emoji}
-                    type="button"
-                    onClick={() => addEmoji(emoji)}
-                  >
-                    {emoji}
-                  </button>
-                ))}
-              </div>
+          {/* Send Button */}
+          <button
+            type="submit"
+            disabled={!newMessage.trim() || sending || uploadingFile}
+            className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-xl bg-gradient-to-br from-emerald-600 to-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg transition-all"
+            title="Send message"
+          >
+            {sending || uploadingFile ? (
+              <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              <FiSend className="w-5 h-5" />
             )}
-            
-            <input
-              type="text"
-              placeholder={editingMessage ? "Edit message..." : "Type a message..."}
-              value={newMessage}
-              onChange={(e) => handleTyping(e.target.value)}
-              onKeyPress={handleKeyPress}
-              disabled={sending}
-              className="message-input"
-            />
-            <button 
-              type="submit"
-              className="send-button" 
-              disabled={!newMessage.trim() || sending || uploadingFile}
-            >
-              {sending ? 'Sending...' : uploadingFile ? 'Uploading...' : editingMessage ? 'Save' : 'Send'}
-            </button>
-          </form>
-        </div>
+          </button>
+        </form>
       </div>
     </div>
   )

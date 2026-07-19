@@ -1,5 +1,12 @@
 import { useState, useEffect, useRef } from 'react'
-import './ActiveCallScreen.css'
+import { Avatar } from './ui'
+import { 
+  FiMic, 
+  FiMicOff, 
+  FiVideo, 
+  FiVideoOff, 
+  FiPhoneOff
+} from 'react-icons/fi'
 
 function ActiveCallScreen({ call, localStream, remoteStream, onEndCall }) {
   const [isMuted, setIsMuted] = useState(false)
@@ -62,114 +69,142 @@ function ActiveCallScreen({ call, localStream, remoteStream, onEndCall }) {
   const otherUser = call.caller || call.callee
 
   return (
-    <div className="active-call-overlay">
-      {/* Call Header */}
-      <div className="call-header">
-        <div className="call-user-info">
-          <div className="call-user-avatar">
-            {otherUser.profilePicture ? (
-              <img src={otherUser.profilePicture} alt={otherUser.name} />
-            ) : (
-              <div className="avatar-placeholder">
-                {otherUser.name.charAt(0).toUpperCase()}
-              </div>
-            )}
+    <div className="fixed inset-0 z-[9999] bg-gray-900 flex flex-col">
+      {/* Header */}
+      <div className="absolute top-0 left-0 right-0 z-10 bg-gradient-to-b from-black/60 to-transparent p-6">
+        <div className="flex items-center justify-between">
+          <div className="flex items-center gap-4">
+            <Avatar
+              name={otherUser.name}
+              src={otherUser.profilePicture}
+              size="md"
+              className="ring-2 ring-white/30"
+            />
+            <div>
+              <h3 className="text-white font-semibold text-lg">
+                {otherUser.name}
+              </h3>
+              <p className="text-white/80 text-sm">
+                {formatDuration(callDuration)}
+              </p>
+            </div>
           </div>
-          <div className="call-user-details">
-            <h3>{otherUser.name}</h3>
-            <div className="call-duration">{formatDuration(callDuration)}</div>
+          
+          <div className="flex items-center gap-2">
+            <div className={`w-2 h-2 rounded-full ${call.status === 'ANSWERED' ? 'bg-emerald-500' : 'bg-blue-500'} animate-pulse`}></div>
+            <span className="text-white/80 text-sm">
+              {call.status === 'ANSWERED' ? 'Connected' : 'Connecting...'}
+            </span>
           </div>
-        </div>
-        <div className="call-status-text">
-          {call.status === 'ANSWERED' ? '🟢 Connected' : '🔵 Connecting...'}
         </div>
       </div>
 
       {/* Video/Audio Container */}
-      <div className="video-container">
+      <div className="flex-1 relative">
         {isVideoCall ? (
           <>
+            {/* Remote Video */}
             {remoteStream ? (
               <video
                 ref={remoteVideoRef}
-                className="remote-video"
+                className="w-full h-full object-cover"
                 autoPlay
                 playsInline
               />
             ) : (
-              <div className="audio-only-indicator">
-                <div className="audio-only-avatar">
-                  {otherUser.profilePicture ? (
-                    <img src={otherUser.profilePicture} alt={otherUser.name} />
-                  ) : (
-                    <div className="avatar-placeholder">
-                      {otherUser.name.charAt(0).toUpperCase()}
-                    </div>
-                  )}
-                </div>
-                <div className="audio-only-info">
-                  <h2>{otherUser.name}</h2>
-                  <p>Connecting...</p>
-                </div>
+              <div className="w-full h-full flex flex-col items-center justify-center">
+                <Avatar
+                  name={otherUser.name}
+                  src={otherUser.profilePicture}
+                  size="2xl"
+                  className="mb-4"
+                />
+                <h2 className="text-white text-2xl font-semibold mb-2">
+                  {otherUser.name}
+                </h2>
+                <p className="text-white/70">Connecting...</p>
               </div>
             )}
 
+            {/* Local Video (Picture-in-Picture) */}
             {localStream && (
-              <video
-                ref={localVideoRef}
-                className="local-video"
-                autoPlay
-                playsInline
-                muted
-              />
+              <div className="absolute top-24 right-6 w-32 h-40 rounded-2xl overflow-hidden shadow-2xl border-2 border-white/30">
+                <video
+                  ref={localVideoRef}
+                  className="w-full h-full object-cover"
+                  autoPlay
+                  playsInline
+                  muted
+                />
+              </div>
             )}
           </>
         ) : (
-          <div className="audio-only-indicator">
-            <div className="audio-only-avatar">
-              {otherUser.profilePicture ? (
-                <img src={otherUser.profilePicture} alt={otherUser.name} />
-              ) : (
-                <div className="avatar-placeholder">
-                  {otherUser.name.charAt(0).toUpperCase()}
-                </div>
-              )}
+          /* Audio Only */
+          <div className="w-full h-full flex flex-col items-center justify-center">
+            <div className="w-32 h-32 mb-6 animate-pulse-slow">
+              <Avatar
+                name={otherUser.name}
+                src={otherUser.profilePicture}
+                size="2xl"
+              />
             </div>
-            <div className="audio-only-info">
-              <h2>{otherUser.name}</h2>
-              <p>Voice Call</p>
-            </div>
+            <h2 className="text-white text-3xl font-semibold mb-2">
+              {otherUser.name}
+            </h2>
+            <p className="text-white/70 text-lg">Voice Call</p>
           </div>
         )}
       </div>
 
       {/* Call Controls */}
-      <div className="call-controls">
-        <button
-          className={`call-control-btn ${isMuted ? 'muted' : ''}`}
-          onClick={toggleMute}
-          title={isMuted ? 'Unmute' : 'Mute'}
-        >
-          {isMuted ? '🔇' : '🎤'}
-        </button>
-
-        {isVideoCall && (
+      <div className="absolute bottom-0 left-0 right-0 z-10 bg-gradient-to-t from-black/60 to-transparent p-8">
+        <div className="flex justify-center items-center gap-6">
+          {/* Mute Button */}
           <button
-            className={`call-control-btn ${isVideoOff ? 'muted' : ''}`}
-            onClick={toggleVideo}
-            title={isVideoOff ? 'Turn on video' : 'Turn off video'}
+            onClick={toggleMute}
+            className={`w-14 h-14 rounded-full flex items-center justify-center transition-all hover:scale-110 ${
+              isMuted
+                ? 'bg-red-500 hover:bg-red-600'
+                : 'bg-gray-700/80 hover:bg-gray-600'
+            }`}
+            title={isMuted ? 'Unmute' : 'Mute'}
           >
-            {isVideoOff ? '📹' : '📷'}
+            {isMuted ? (
+              <FiMicOff className="w-6 h-6 text-white" />
+            ) : (
+              <FiMic className="w-6 h-6 text-white" />
+            )}
           </button>
-        )}
 
-        <button
-          className="call-control-btn end-call-btn"
-          onClick={onEndCall}
-          title="End call"
-        >
-          📞
-        </button>
+          {/* Video Toggle (for video calls) */}
+          {isVideoCall && (
+            <button
+              onClick={toggleVideo}
+              className={`w-14 h-14 rounded-full flex items-center justify-center transition-all hover:scale-110 ${
+                isVideoOff
+                  ? 'bg-red-500 hover:bg-red-600'
+                  : 'bg-gray-700/80 hover:bg-gray-600'
+              }`}
+              title={isVideoOff ? 'Turn on video' : 'Turn off video'}
+            >
+              {isVideoOff ? (
+                <FiVideoOff className="w-6 h-6 text-white" />
+              ) : (
+                <FiVideo className="w-6 h-6 text-white" />
+              )}
+            </button>
+          )}
+
+          {/* End Call Button */}
+          <button
+            onClick={onEndCall}
+            className="w-16 h-16 rounded-full bg-red-500 hover:bg-red-600 flex items-center justify-center transition-all hover:scale-110 shadow-lg"
+            title="End call"
+          >
+            <FiPhoneOff className="w-7 h-7 text-white" />
+          </button>
+        </div>
       </div>
     </div>
   )

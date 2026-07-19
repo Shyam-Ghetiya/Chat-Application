@@ -3,7 +3,17 @@ import { useNavigate } from 'react-router-dom'
 import { useAuth } from '../context/AuthContext'
 import * as notificationAPI from '../services/notificationService'
 import websocketService from '../services/websocketService'
-import './NotificationsPage.css'
+import { Button, Badge } from '../components/ui'
+import { 
+  FiBell,
+  FiCheck,
+  FiCheckCircle,
+  FiTrash2,
+  FiUserPlus,
+  FiMessageCircle,
+  FiUsers,
+  FiAtSign
+} from 'react-icons/fi'
 
 function NotificationsPage() {
   const { user } = useAuth()
@@ -52,7 +62,7 @@ function NotificationsPage() {
     } catch (err) {
       console.error('Failed to mark as read:', err)
       setError('Failed to mark notification as read')
-      setTimeout(() => setError(''), 3000) // Clear error after 3 seconds
+      setTimeout(() => setError(''), 3000)
     }
   }
 
@@ -60,7 +70,7 @@ function NotificationsPage() {
     try {
       await notificationAPI.markAllAsRead()
       setNotifications((prev) => prev.map((n) => ({ ...n, isRead: true })))
-      setError('') // Clear any existing errors
+      setError('')
       // Trigger event for MainLayout to update count
       window.dispatchEvent(new CustomEvent('notification-count-update'))
     } catch (err) {
@@ -74,7 +84,7 @@ function NotificationsPage() {
     try {
       await notificationAPI.deleteNotification(notificationId)
       setNotifications((prev) => prev.filter((n) => n.id !== notificationId))
-      setError('') // Clear any existing errors
+      setError('')
       // Trigger event for MainLayout to update count
       window.dispatchEvent(new CustomEvent('notification-count-update'))
     } catch (err) {
@@ -101,19 +111,37 @@ function NotificationsPage() {
   }
 
   const getNotificationIcon = (type) => {
+    const iconProps = "w-5 h-5"
     switch (type) {
       case 'FRIEND_REQUEST':
-        return '👥'
+        return <FiUserPlus className={`${iconProps} text-blue-600 dark:text-blue-400`} />
       case 'FRIEND_REQUEST_ACCEPTED':
-        return '✅'
+        return <FiCheckCircle className={`${iconProps} text-emerald-600 dark:text-emerald-400`} />
       case 'NEW_MESSAGE':
-        return '💬'
+        return <FiMessageCircle className={`${iconProps} text-purple-600 dark:text-purple-400`} />
       case 'MENTION':
-        return '@'
+        return <FiAtSign className={`${iconProps} text-orange-600 dark:text-orange-400`} />
       case 'GROUP_INVITE':
-        return '👥'
+        return <FiUsers className={`${iconProps} text-blue-600 dark:text-blue-400`} />
       default:
-        return '🔔'
+        return <FiBell className={`${iconProps} text-gray-600 dark:text-gray-400`} />
+    }
+  }
+
+  const getNotificationBgColor = (type) => {
+    switch (type) {
+      case 'FRIEND_REQUEST':
+        return 'bg-blue-100 dark:bg-blue-900/20'
+      case 'FRIEND_REQUEST_ACCEPTED':
+        return 'bg-emerald-100 dark:bg-emerald-900/20'
+      case 'NEW_MESSAGE':
+        return 'bg-purple-100 dark:bg-purple-900/20'
+      case 'MENTION':
+        return 'bg-orange-100 dark:bg-orange-900/20'
+      case 'GROUP_INVITE':
+        return 'bg-blue-100 dark:bg-blue-900/20'
+      default:
+        return 'bg-gray-100 dark:bg-gray-700'
     }
   }
 
@@ -136,60 +164,127 @@ function NotificationsPage() {
 
   if (loading) {
     return (
-      <div className="notifications-page">
-        <div className="loading">Loading notifications...</div>
+      <div className="flex items-center justify-center h-full">
+        <div className="text-center">
+          <div className="w-16 h-16 border-4 border-emerald-200 border-t-emerald-600 rounded-full animate-spin mx-auto mb-4"></div>
+          <p className="text-gray-600 dark:text-gray-400">Loading notifications...</p>
+        </div>
       </div>
     )
   }
 
   return (
-    <div className="notifications-page">
-      <div className="notifications-container">
-        <div className="notifications-header">
-          <h2>Notifications</h2>
+    <div className="h-full flex flex-col bg-white dark:bg-gray-800">
+      {/* Header */}
+      <div className="border-b border-gray-200 dark:border-gray-700 p-4 lg:p-6">
+        <div className="flex items-center justify-between">
+          <div>
+            <h1 className="text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white font-poppins">
+              Notifications
+            </h1>
+            {unreadCount > 0 && (
+              <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
+                {unreadCount} unread {unreadCount === 1 ? 'notification' : 'notifications'}
+              </p>
+            )}
+          </div>
           {unreadCount > 0 && (
-            <button onClick={handleMarkAllAsRead} className="btn-mark-all">
+            <Button
+              variant="secondary"
+              size="md"
+              onClick={handleMarkAllAsRead}
+              leftIcon={FiCheckCircle}
+              className="hidden sm:flex"
+            >
               Mark all as read
+            </Button>
+          )}
+          {unreadCount > 0 && (
+            <button
+              onClick={handleMarkAllAsRead}
+              className="sm:hidden w-10 h-10 flex items-center justify-center rounded-xl text-emerald-600 dark:text-emerald-400 hover:bg-emerald-50 dark:hover:bg-emerald-900/20 transition-colors"
+              title="Mark all as read"
+            >
+              <FiCheckCircle className="w-6 h-6" />
             </button>
           )}
         </div>
+      </div>
 
-        {error && <div className="error-message">{error}</div>}
+      {/* Error Message */}
+      {error && (
+        <div className="mx-4 mt-4 p-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-xl text-red-700 dark:text-red-400 text-sm animate-shake">
+          {error}
+        </div>
+      )}
 
+      {/* Notifications List */}
+      <div className="flex-1 overflow-y-auto">
         {notifications.length === 0 ? (
-          <div className="no-notifications">
-            <div className="no-notifications-icon">🔔</div>
-            <p>No notifications yet</p>
-            <p className="no-notifications-subtitle">
-              We'll notify you when something happens
+          <div className="flex flex-col items-center justify-center h-full text-center p-8">
+            <div className="w-24 h-24 bg-gradient-to-br from-emerald-100 to-blue-100 dark:from-emerald-900/20 dark:to-blue-900/20 rounded-full flex items-center justify-center mb-6">
+              <FiBell className="w-12 h-12 text-emerald-600 dark:text-emerald-400" />
+            </div>
+            <h3 className="text-xl font-semibold text-gray-900 dark:text-white mb-2">
+              No notifications yet
+            </h3>
+            <p className="text-gray-600 dark:text-gray-400 max-w-sm">
+              We'll notify you when something interesting happens
             </p>
           </div>
         ) : (
-          <div className="notifications-list">
+          <div className="divide-y divide-gray-100 dark:divide-gray-700">
             {notifications.map((notification) => (
               <div
                 key={notification.id}
-                className={`notification-item ${!notification.isRead ? 'unread' : ''}`}
                 onClick={() => handleNotificationClick(notification)}
+                className={`relative p-4 lg:p-5 flex items-start gap-4 cursor-pointer transition-all group ${
+                  !notification.isRead
+                    ? 'bg-emerald-50/50 dark:bg-emerald-900/10 hover:bg-emerald-50 dark:hover:bg-emerald-900/20'
+                    : 'hover:bg-gray-50 dark:hover:bg-gray-700/50'
+                }`}
               >
-                <div className="notification-icon">
+                {/* Icon */}
+                <div className={`flex-shrink-0 w-12 h-12 rounded-xl flex items-center justify-center ${getNotificationBgColor(notification.type)}`}>
                   {getNotificationIcon(notification.type)}
                 </div>
-                <div className="notification-content">
-                  <div className="notification-title">{notification.title}</div>
-                  <div className="notification-message">{notification.message}</div>
-                  <div className="notification-time">{formatTime(notification.createdAt)}</div>
+
+                {/* Content */}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-start justify-between gap-2 mb-1">
+                    <h3 className={`font-semibold text-gray-900 dark:text-white ${!notification.isRead ? 'font-bold' : ''}`}>
+                      {notification.title}
+                    </h3>
+                    <span className="text-xs text-gray-500 dark:text-gray-400 whitespace-nowrap">
+                      {formatTime(notification.createdAt)}
+                    </span>
+                  </div>
+                  <p className="text-sm text-gray-600 dark:text-gray-400 mb-2">
+                    {notification.message}
+                  </p>
+                  {!notification.isRead && (
+                    <Badge variant="primary" size="sm" dot>
+                      New
+                    </Badge>
+                  )}
                 </div>
-                {!notification.isRead && <div className="notification-badge"></div>}
+
+                {/* Delete Button */}
                 <button
-                  className="notification-delete"
                   onClick={(e) => {
                     e.stopPropagation()
                     handleDelete(notification.id)
                   }}
+                  className="flex-shrink-0 w-8 h-8 flex items-center justify-center rounded-lg text-gray-400 hover:text-red-600 dark:hover:text-red-400 hover:bg-red-50 dark:hover:bg-red-900/20 transition-colors opacity-0 group-hover:opacity-100"
+                  title="Delete notification"
                 >
-                  ×
+                  <FiTrash2 className="w-4 h-4" />
                 </button>
+
+                {/* Unread Indicator */}
+                {!notification.isRead && (
+                  <div className="absolute left-0 top-1/2 -translate-y-1/2 w-1 h-12 bg-emerald-600 dark:bg-emerald-400 rounded-r"></div>
+                )}
               </div>
             ))}
           </div>
