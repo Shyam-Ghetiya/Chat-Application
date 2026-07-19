@@ -1,6 +1,15 @@
 # Uploads folder (user-generated content)
 uploads/
 
+# Kiro IDE files
+.kiro/
+
+# Helper/Documentation files (optional)
+PUSH_COMMANDS.txt
+push-to-github.sh
+GITHUB_PUSH_GUIDE.md
+UI_FIXES_APPLIED.md
+
 # ===========================
 # Backend (Java/Maven/Spring Boot)
 # ===========================
