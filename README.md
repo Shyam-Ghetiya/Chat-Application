@@ -1,18 +1,52 @@
-# 💬 Real-Time Chat Application
+# 💬 Real-Time Chat Application with AI Features 🤖
 
-A fully-featured, production-ready real-time chat application with voice/video calling built with **Spring Boot**, **React**, **WebSocket**, and **WebRTC**.
+A fully-featured, production-ready real-time chat application with voice/video calling and **AI-powered translation & summarization** built with **Spring Boot**, **React**, **WebSocket**, **WebRTC**, and **Groq API**.
 
 ![Status](https://img.shields.io/badge/status-production%20ready-brightgreen)
-![Version](https://img.shields.io/badge/version-1.0.0-blue)
+![Version](https://img.shields.io/badge/version-2.0.0-blue)
 ![License](https://img.shields.io/badge/license-MIT-green)
+![AI](https://img.shields.io/badge/AI-Groq%20Powered-purple)
+
+## 🚀 Quick Start with AI
+
+```bash
+# 1. Get free Groq API key from https://console.groq.com/
+export GROQ_API_KEY="your-groq-api-key-here"
+
+# 2. Start backend
+cd backend && mvn spring-boot:run
+
+# 3. Start frontend  
+cd frontend && npm run dev
+
+# 4. Open http://localhost:5175 and chat with AI features!
+```
+
+📖 **[Complete AI Setup Guide →](AI_QUICK_START.md)**
 
 ## 🌟 Features
+
+### 🤖 NEW: AI-Powered Features (v2.0)
+- **AI Chat Summarization** 📝
+  - Summarize entire conversations or last N messages
+  - Multiple styles: Bullet points, paragraphs, action items, meeting notes
+  - Multiple lengths: Short, medium, detailed
+  - **18+ languages** supported (English, Hindi, Gujarati, Spanish, French, German, Japanese, Chinese, Arabic, etc.)
+  - Copy, download, or regenerate summaries
+
+- **AI Translation Before Sending** 🌍
+  - Type in your language, send in another language
+  - Real-time translation using Groq LLM
+  - Preserves emojis, URLs, emails, and formatting
+  - **18+ languages** supported
+  - Seamless integration with existing chat flow
 
 ### 🔐 Authentication & Security
 - JWT-based authentication
 - BCrypt password encryption
 - Spring Security integration
 - Protected routes
+- AI features require authentication
 
 ### 👥 Social Features
 - User profiles with profile pictures
@@ -27,8 +61,9 @@ A fully-featured, production-ready real-time chat application with voice/video c
 - Typing indicators
 - Edit and delete messages
 - Reply to messages
-- Emoji support (16 emojis)
+- **Emoji support (128+ emojis)**
 - Message search
+- **AI translation for messages**
 
 ### 📁 File Sharing
 - Share images, videos, documents, and audio
@@ -42,6 +77,7 @@ A fully-featured, production-ready real-time chat application with voice/video c
 - Rename groups
 - Leave/delete groups
 - Group member management
+- **Summarize group conversations**
 
 ### 🔔 Notifications
 - Friend request notifications
@@ -538,3 +574,94 @@ npm run dev
 - SockJS Client
 - STOMP.js
 - Fetch API
+
+
+---
+
+## 🤖 AI Features Documentation
+
+### Complete AI Setup & Documentation
+
+- **[AI Quick Start Guide](AI_QUICK_START.md)** - Get AI features running in 5 minutes
+- **[AI Features Setup](AI_FEATURES_SETUP.md)** - Comprehensive setup and usage guide
+- **[AI Architecture](AI_ARCHITECTURE.md)** - System architecture and flow diagrams
+- **[Testing Checklist](TESTING_CHECKLIST.md)** - Complete testing guide
+- **[Implementation Summary](AI_IMPLEMENTATION_SUMMARY.md)** - What was built and how
+
+### AI Features Quick Reference
+
+#### Translation
+```
+User Interface:
+🌐 [Typing: English] → [Message: Hindi]
+
+Example:
+Type: "Hello, how are you?"
+Send: "नमस्ते, आप कैसे हैं?"
+```
+
+#### Summarization
+```
+Click 📄 → Configure → Generate Summary
+
+Options:
+• Type: Last 20/50/100, Entire, Date Range
+• Length: Short, Medium, Detailed
+• Style: Bullets, Paragraph, Action Items, etc.
+• Language: 18+ supported
+```
+
+### Supported Languages
+
+English 🇬🇧 | Hindi 🇮🇳 | Gujarati 🇮🇳 | Tamil 🇮🇳 | Telugu 🇮🇳 | Malayalam 🇮🇳 | Marathi 🇮🇳 | Punjabi 🇮🇳 | Spanish 🇪🇸 | French 🇫🇷 | German 🇩🇪 | Japanese 🇯🇵 | Chinese 🇨🇳 | Arabic 🇸🇦 | Russian 🇷🇺 | Portuguese 🇵🇹 | Italian 🇮🇹 | Korean 🇰🇷
+
+### AI API Endpoints
+
+```http
+POST /api/ai/translate
+POST /api/ai/summarize  
+GET  /api/ai/health
+```
+
+All endpoints require JWT authentication.
+
+### Groq API Configuration
+
+```properties
+# application.properties
+groq.api.key=${GROQ_API_KEY:your-key-here}
+groq.api.url=https://api.groq.com/openai/v1/chat/completions
+groq.api.model=llama-3.3-70b-versatile
+groq.api.timeout=30000
+```
+
+### Free Tier Limits
+
+- **14,400 requests/day**
+- **450M tokens/month**
+- **30 requests/minute**
+
+### Troubleshooting AI Features
+
+**"Groq API is not configured"**
+```bash
+export GROQ_API_KEY="gsk_your_key_here"
+```
+
+**Translation not working**
+- Ensure different languages are selected
+- Check browser console for errors
+- Verify backend logs
+
+**Summarization fails**
+- Ensure conversation has messages
+- Check Groq API key is valid
+- Verify user is conversation member
+
+---
+
+**ChatVerse v2.0** - Now with AI! 🚀
+
+**Version:** 2.0.0  
+**AI Provider:** Groq (Llama 3.3 70B Versatile)  
+**Last Updated:** July 19, 2026

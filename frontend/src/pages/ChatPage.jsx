@@ -4,12 +4,14 @@ import { useAuth } from '../context/AuthContext'
 import * as conversationAPI from '../services/conversationService'
 import * as messageAPI from '../services/messageService'
 import * as fileService from '../services/fileService'
+import * as aiService from '../services/aiService'
 import websocketService from '../services/websocketService'
 import callService from '../services/callService'
 import GroupInfoPanel from '../components/GroupInfoPanel'
 import FilePreview from '../components/FilePreview'
 import IncomingCallModal from '../components/IncomingCallModal'
 import ActiveCallScreen from '../components/ActiveCallScreen'
+import ChatSummarizeModal from '../components/ChatSummarizeModal'
 import { Avatar, Button } from '../components/ui'
 import {
   FiArrowLeft,
@@ -22,7 +24,9 @@ import {
   FiCornerUpLeft,
   FiEdit2,
   FiTrash2,
-  FiX
+  FiX,
+  FiFileText,
+  FiGlobe
 } from 'react-icons/fi'
 
 function ChatPage() {
@@ -49,6 +53,12 @@ function ChatPage() {
   const messagesContainerRef = useRef(null)
   const typingTimeoutRef = useRef(null)
   const fileInputRef = useRef(null)
+  
+  // AI Feature states
+  const [showSummarizeModal, setShowSummarizeModal] = useState(false)
+  const [typingLanguage, setTypingLanguage] = useState('English')
+  const [messageLanguage, setMessageLanguage] = useState('English')
+  const [translating, setTranslating] = useState(false)
 
   useEffect(() => {
     loadConversation()
@@ -442,7 +452,7 @@ function ChatPage() {
     if (!newMessage.trim() || sending) return
 
     setSending(true)
-    const messageContent = newMessage.trim()
+    let messageContent = newMessage.trim()
     setNewMessage('')
     
     // Handle edit
@@ -467,6 +477,25 @@ function ChatPage() {
         setSending(false)
       }
       return
+    }
+    
+    // AI Translation - BEFORE sending
+    if (typingLanguage !== messageLanguage) {
+      try {
+        setTranslating(true)
+        const translateResponse = await aiService.translateText(
+          messageContent,
+          typingLanguage,
+          messageLanguage
+        )
+        messageContent = translateResponse.translatedText
+      } catch (err) {
+        console.error('Translation failed:', err)
+        // Continue with original text if translation fails
+        setError('Translation failed, sending original message')
+      } finally {
+        setTranslating(false)
+      }
     }
     
     // Stop typing indicator
@@ -684,6 +713,15 @@ function ChatPage() {
 
           {/* Right: Action Buttons */}
           <div className="flex items-center gap-2">
+            {/* AI Summarize Button */}
+            <button
+              onClick={() => setShowSummarizeModal(true)}
+              className="w-10 h-10 flex items-center justify-center rounded-xl text-gray-600 dark:text-gray-400 hover:bg-purple-50 dark:hover:bg-purple-900/20 hover:text-purple-600 dark:hover:text-purple-400 transition-colors"
+              title="Summarize Chat"
+            >
+              <FiFileText className="w-5 h-5" />
+            </button>
+            
             {conversation.type === 'DIRECT' && conversation.otherUser && (
               <>
                 <button
@@ -955,14 +993,57 @@ function ChatPage() {
         )}
         
         {/* Input Form */}
-        <form onSubmit={handleSendMessage} className="flex items-end gap-2">
-          <input
-            type="file"
-            ref={fileInputRef}
-            onChange={handleFileSelect}
-            className="hidden"
-            accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar"
-          />
+        <form onSubmit={handleSendMessage} className="space-y-3">
+          {/* AI Translation Language Selectors */}
+          <div className="flex items-center gap-2 p-2 bg-gray-50 dark:bg-gray-700/50 rounded-lg border border-gray-200 dark:border-gray-600">
+            <FiGlobe className="w-4 h-4 text-gray-500 dark:text-gray-400 flex-shrink-0" />
+            <div className="flex items-center gap-2 flex-1">
+              <div className="flex-1">
+                <select
+                  value={typingLanguage}
+                  onChange={(e) => setTypingLanguage(e.target.value)}
+                  className="w-full px-2 py-1 text-xs bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-white focus:ring-1 focus:ring-emerald-500 focus:border-transparent"
+                  title="Typing Language"
+                >
+                  {aiService.SUPPORTED_LANGUAGES.map((lang) => (
+                    <option key={lang.code} value={lang.code}>
+                      {lang.flag} Typing: {lang.name.split(' ')[0]}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <span className="text-gray-400 dark:text-gray-500">→</span>
+              <div className="flex-1">
+                <select
+                  value={messageLanguage}
+                  onChange={(e) => setMessageLanguage(e.target.value)}
+                  className="w-full px-2 py-1 text-xs bg-white dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md text-gray-900 dark:text-white focus:ring-1 focus:ring-emerald-500 focus:border-transparent"
+                  title="Message Language"
+                >
+                  {aiService.SUPPORTED_LANGUAGES.map((lang) => (
+                    <option key={lang.code} value={lang.code}>
+                      {lang.flag} Send: {lang.name.split(' ')[0]}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+            {translating && (
+              <div className="flex items-center gap-1 px-2 py-1 bg-purple-50 dark:bg-purple-900/20 rounded-md">
+                <div className="w-3 h-3 border-2 border-purple-500 border-t-transparent rounded-full animate-spin"></div>
+                <span className="text-xs text-purple-600 dark:text-purple-400">Translating...</span>
+              </div>
+            )}
+          </div>
+          
+          <div className="flex items-end gap-2">
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileSelect}
+              className="hidden"
+              accept="image/*,video/*,audio/*,.pdf,.doc,.docx,.xls,.xlsx,.txt,.zip,.rar"
+            />
           
           {/* Attach Button */}
           <button
@@ -1078,18 +1159,26 @@ function ChatPage() {
           {/* Send Button */}
           <button
             type="submit"
-            disabled={!newMessage.trim() || sending || uploadingFile}
+            disabled={!newMessage.trim() || sending || uploadingFile || translating}
             className="flex-shrink-0 w-10 h-10 flex items-center justify-center rounded-xl bg-gradient-to-br from-emerald-600 to-blue-600 text-white disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg transition-all"
             title="Send message"
           >
-            {sending || uploadingFile ? (
+            {sending || uploadingFile || translating ? (
               <div className="w-5 h-5 border-2 border-white border-t-transparent rounded-full animate-spin"></div>
             ) : (
               <FiSend className="w-5 h-5" />
             )}
           </button>
+          </div>
         </form>
       </div>
+      
+      {/* AI Summarize Modal */}
+      <ChatSummarizeModal
+        isOpen={showSummarizeModal}
+        onClose={() => setShowSummarizeModal(false)}
+        conversationId={conversationId}
+      />
     </div>
   )
 }
